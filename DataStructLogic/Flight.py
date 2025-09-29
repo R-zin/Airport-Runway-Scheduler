@@ -4,7 +4,7 @@ from .Runway import Runway
 from .Scheduling import add_flight, schedule_flights
 from .DataModel import Flight
 
-class Airport:
+class Flight:
     def __init__(self, name, num_runways=2):
         self.name = name
         self.runways = [Runway(i+1) for i in range(num_runways)]

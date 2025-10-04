@@ -5,7 +5,7 @@ from Runway import Runway
 from AirportGraph import AirportGraph
 
 
-class AirportManagementSystem:
+class Managmement_System:
     """Manages flights, runways, cancellations, and routes."""
 
     def __init__(self):
@@ -14,7 +14,6 @@ class AirportManagementSystem:
         self.runways = [Runway(i+1) for i in range(3)]  # 3 runways
         self.canceled_flights = []      # Stack of canceled flights
         self.airport_graph = AirportGraph()
-
         self._add_sample_routes()
 
     # ---------------- ROUTES ----------------
@@ -29,6 +28,8 @@ class AirportManagementSystem:
         ]
         for src, dst, dist in routes:
             self.airport_graph.add_route(src, dst, dist)
+    def add_route(self,src,dest,distance):
+        self.airport_graph.add_route(src,dest,distance)
 
     def find_route(self, start, destination):
         """Find and show the shortest route between two airports."""

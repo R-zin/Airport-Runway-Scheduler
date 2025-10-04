@@ -1,10 +1,3 @@
-# Airport Management System Requirements
-# This project uses only core Python libraries - no external dependencies required!
-
-# Core Python modules used:
-# - heapq (for priority queues)
-# - collections (for defaultdict)
-# - datetime (for time handling)
-
-# No additional packages need to be installed.
-# This project demonstrates DSA concepts using only standard Python libraries.
+uvicorn
+fastapi
+heapq

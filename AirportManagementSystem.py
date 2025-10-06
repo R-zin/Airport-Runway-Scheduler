@@ -128,3 +128,9 @@ class Managmement_System:
             print(" Recently canceled:")
             for f in self.canceled_flights[-3:]:
                 print("  -", f)
+    def show_status_list(self):
+        return {'scheduled flights':self.scheduled_flights,
+                'cancelled flights':self.canceled_flights,
+                'runways':self.runways}
+    def get_scheduled_flights(self):
+        return self.scheduled_flights

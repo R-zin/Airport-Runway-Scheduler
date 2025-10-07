@@ -29,6 +29,12 @@ def get_flights():
         return {'data': flight_data}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f'Error fetching flights: {str(e)}')
+@app.get('/flights/assign_runway')
+def runway_allocation():
+    management_system.allocate_runways()
+
+
+
 
 
 

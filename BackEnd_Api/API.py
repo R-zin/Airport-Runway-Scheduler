@@ -14,13 +14,29 @@ def add_plane(data:add_flights):
         return {'status':f'flight No {data.flight_no} added successfully'}
     except Exception as e:
         raise HTTPException(status_code=500,detail='flight adding failed')
+@app.post('/flights/cancel_flight')
+def cancel(data:cancel_flight):
+    try:
+        management_system.cancel_flight(data.flight_no)
+        return {'status':f'flight {data.flight_no} cancelled'}
+    except Exception as e:
+        raise HTTPException(status_code=500,detail=f'flight could not be cancelled {str(e)}')
+@app.get('/flights/cancelled_list')
+def get_cancelled_list():
+    try:
+        lst = management_system.canceled_flights
+        return {'cancelled_list':lst}
+    except Exception as e:
+        raise HTTPException(status_code=500,detail=f'Could not retrive cancelled flights {str(e)}')
+
 @app.post('/route/add_route')
 def add_route(data:route_add):
     try:
         management_system.add_route(data.src,data.dest,data.distance)
         return {'status':'Route Added successfully'}
     except Exception as e:
-        raise HTTPException(status_code=500,detail='Route adding failed')
+        raise HTTPException(status_code=500,detail=f'Route adding failed {str(e)}')
+
 @app.get('/flights/list_flights')
 def get_flights():
     try:
@@ -31,7 +47,14 @@ def get_flights():
         raise HTTPException(status_code=500, detail=f'Error fetching flights: {str(e)}')
 @app.get('/flights/assign_runway')
 def runway_allocation():
-    management_system.allocate_runways()
+    try:
+        management_system.allocate_runways()
+        return {'status':'Allocation successful'}
+    except Exception as e:
+        raise  HTTPException(status_code=500,detail=f'runway allocation failed {str(e)}')
+
+
+
 
 
 

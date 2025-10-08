@@ -9,8 +9,9 @@ from datetime import datetime
 class Flight:
     """Represents a flight with priority and departure time."""
     
-    def __init__(self, flight_number, destination, departure_time, is_emergency=False):
+    def __init__(self, flight_number, destination, departure_time, is_emergency=False,status='Waiting for assigning'):
         self.flight_number = flight_number
+        self.status = status
         self.destination = destination
         self.departure_time = departure_time
         self.is_emergency = is_emergency

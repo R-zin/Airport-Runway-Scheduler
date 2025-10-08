@@ -73,6 +73,7 @@ class Managmement_System:
         for flight in self.scheduled_flights[:]:
             for runway in self.runways:
                 if runway.is_available and runway.assign_flight(flight):
+                    flight.status = 'Runway Assigned'
                     flight.assigned_runway = runway
                     print(f"{flight.flight_number} → {runway}")
                     self.scheduled_flights.remove(flight)
@@ -90,6 +91,7 @@ class Managmement_System:
         # In scheduled list
         for f in self.scheduled_flights:
             if f.flight_number == number:
+                f.status = 'Cancelled'
                 self.scheduled_flights.remove(f)
                 self.canceled_flights.append(f)
                 print(f"Canceled: {number}")
@@ -135,3 +137,4 @@ class Managmement_System:
                 'runways':self.runways}
     def get_scheduled_flights(self):
         return self.scheduled_flights
+

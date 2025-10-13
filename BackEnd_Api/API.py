@@ -2,7 +2,9 @@
 from AirportManagementSystem import Managmement_System
 from fastapi import FastAPI,HTTPException
 from BackEnd_Api.DataModels import *
+
 management_system = Managmement_System()
+management_system._add_sample_routes()
 app = FastAPI()
 
 
@@ -37,7 +39,17 @@ def add_route(data:route_add):
     except Exception as e:
         raise HTTPException(status_code=500,detail=f'Route adding failed {str(e)}')
 
-@app.get('/flights/list_flights')
+@app.post('/route/find_route')
+def findroute(data:route_find_data):
+    try:
+        path,distance = management_system.airport_graph.find_shortest_route(data.src,data.dest)
+        return {
+            'Path':path,
+            'Distance':distance
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500,detail=f'Could not find the route {str(e)}')
+@app.get('/flights/list_scheduled_flights')
 def get_flights():
     try:
         flights = management_system.get_scheduled_flights()
@@ -45,6 +57,13 @@ def get_flights():
         return {'data': flight_data}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f'Error fetching flights: {str(e)}')
+@app.get('/flight/get_all_flights')
+def list_all():
+    try:
+        flights = management_system.history
+        return {'data':flights}
+    except Exception as e:
+        raise HTTPException(status_code=500,detail=f'Error getting history flights {str(e)}')
 @app.get('/flights/assign_runway')
 def runway_allocation():
     try:
@@ -52,6 +71,8 @@ def runway_allocation():
         return {'status':'Allocation successful'}
     except Exception as e:
         raise  HTTPException(status_code=500,detail=f'runway allocation failed {str(e)}')
+
+
 
 
 

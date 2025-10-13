@@ -11,3 +11,6 @@ class route_add(BaseModel):
     src:str
     dest:str
     distance:int
+class route_find_data(BaseModel):
+    src:str
+    dest:str

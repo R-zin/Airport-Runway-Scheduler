@@ -15,6 +15,7 @@ class Managmement_System:
         self.canceled_flights = []      # Stack of canceled flights
         self.airport_graph = AirportGraph()
         self._add_sample_routes()
+        self.history = []
 
     # ---------------- ROUTES ----------------
     def _add_sample_routes(self):
@@ -45,6 +46,7 @@ class Managmement_System:
         try:
             departure_time = datetime.strptime(time_str, "%H:%M")
             flight = Flight(number, destination, departure_time, emergency)
+            self.history.append(flight)
             heapq.heappush(self.flight_queue, flight)
             print(f"Added: {flight}")
 

@@ -11,11 +11,13 @@ class Runway:
         self.runway_id = runway_id
         self.is_available = True
         self.current_flight = None
+        self.current_flight_name = ""
     
     def assign_flight(self, flight):
         """Assign a flight to this runway."""
         if self.is_available:
             self.current_flight = flight
+            self.current_flight_name = flight.flight_number
             self.is_available = False
             return True
         return False

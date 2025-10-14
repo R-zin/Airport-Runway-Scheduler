@@ -14,3 +14,13 @@ class route_add(BaseModel):
 class route_find_data(BaseModel):
     src:str
     dest:str
+class FlightResponse(BaseModel):
+    flight_no:str
+    destination:str
+    status:str
+    assigned_runway:str
+    Emergency_flight:bool
+    departure_time:str
+class RunwayResponse(BaseModel):
+    runway_no:int
+    flight_no:str

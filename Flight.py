@@ -15,6 +15,7 @@ class Flight:
         self.destination = destination
         self.departure_time = departure_time
         self.is_emergency = is_emergency
+        self.assigned_runway_no = None
         self.assigned_runway = None
         self.priority = 1 if is_emergency else 2  # Lower number = higher priority
     

@@ -77,6 +77,7 @@ class Managmement_System:
                 if runway.is_available and runway.assign_flight(flight):
                     flight.status = 'Runway Assigned'
                     flight.assigned_runway = runway
+                    flight.assigned_runway_no = runway.runway_id
                     print(f"{flight.flight_number} → {runway}")
                     self.scheduled_flights.remove(flight)
                     break

@@ -61,7 +61,18 @@ def get_flights():
 def list_all():
     try:
         flights = management_system.history
-        return {'data':flights}
+        flight_data = [
+            FlightResponse(
+                flight_no=f.flight_number,
+                destination=f.destination,
+                departure_time=f.departure_time,
+                status=f.status,
+                assigned_runway=f.assigned_runway,
+                Emergency_flight=f.is_emergency
+            )
+            for f in flights
+        ]
+        return {'data':flight_data}
     except Exception as e:
         raise HTTPException(status_code=500,detail=f'Error getting history flights {str(e)}')
 @app.get('/flights/assign_runway')
@@ -71,6 +82,21 @@ def runway_allocation():
         return {'status':'Allocation successful'}
     except Exception as e:
         raise  HTTPException(status_code=500,detail=f'runway allocation failed {str(e)}')
+@app.get('/runways/status')
+def runway_info():
+    try:
+        runways = management_system.runways
+        lst = [RunwayResponse(
+            runway_no=r.runway_id,
+            flight_no=r.current_flight_name
+        )for r in runways]
+        return {
+            'data':lst
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500,detail='COuld,nt get info')
+
+
 
 
 

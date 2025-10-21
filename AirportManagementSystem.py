@@ -46,6 +46,7 @@ class Managmement_System:
         try:
             departure_time = datetime.strptime(time_str, "%H:%M")
             flight = Flight(number, destination, departure_time, emergency)
+            flight.status = 'Added and awaiting scheduling'
             self.history.append(flight)
             heapq.heappush(self.flight_queue, flight)
             print(f"Added: {flight}")

@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-
+from typing import Optional
 class add_flights(BaseModel):
     flight_no:str
     destination:str
@@ -18,9 +18,11 @@ class FlightResponse(BaseModel):
     flight_no:str
     destination:str
     status:str
-    assigned_runway:str
+    assigned_runway:Optional[int]
     Emergency_flight:bool
     departure_time:str
 class RunwayResponse(BaseModel):
     runway_no:int
     flight_no:str
+class ReleaseRunway(BaseModel):
+    runway_no:int

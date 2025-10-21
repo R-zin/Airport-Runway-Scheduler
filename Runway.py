@@ -26,6 +26,9 @@ class Runway:
         """Release the runway and return the flight that was using it."""
         if not self.is_available:
             flight = self.current_flight
+            flight.status = 'Taken off'
+            self.current_flight_name = ""
+            flight.assigned_runway_no = None
             self.current_flight = None
             self.is_available = True
             return flight

@@ -1,4 +1,4 @@
-
+from datetime import time
 from AirportManagementSystem import Managmement_System
 from fastapi import FastAPI,HTTPException
 from BackEnd_Api.DataModels import *
@@ -65,9 +65,9 @@ def list_all():
             FlightResponse(
                 flight_no=f.flight_number,
                 destination=f.destination,
-                departure_time=f.departure_time,
+                departure_time=f.departure_time.strftime("%H:%M"),
                 status=f.status,
-                assigned_runway=f.assigned_runway,
+                assigned_runway=f.assigned_runway_no,
                 Emergency_flight=f.is_emergency
             )
             for f in flights
@@ -94,8 +94,15 @@ def runway_info():
             'data':lst
         }
     except Exception as e:
-        raise HTTPException(status_code=500,detail='COuld,nt get info')
+        raise HTTPException(status_code=500,detail=f'COuld,nt get info {str(e)}')
 
+@app.post('/runways/release_runway')
+def release(data:ReleaseRunway):
+    try:
+        management_system.runways[data.runway_no].release_runway()
+        return {'status':'Runway released successfully'}
+    except Exception as e:
+        raise HTTPException(status_code=500,detail=f'Could not release runway {str(e)}')
 
 
 

@@ -1,5 +1,5 @@
 import heapq
-from datetime import datetime
+from datetime import datetime,timedelta
 from Flight import Flight
 from Runway import Runway
 from AirportGraph import AirportGraph
@@ -44,14 +44,15 @@ class Managmement_System:
     def add_flight(self, number, destination, time_str, emergency=False):
         """Add a flight to the system."""
         try:
-            departure_time = datetime.strptime(time_str, "%H:%M")
+            hour, minute = map(int, time_str.split(":"))
+            now = datetime.now()
+            departure_time = datetime(year=now.year, month=now.month, day=now.day, hour=hour, minute=minute)
+            if departure_time <= now:
+                departure_time += timedelta(days=1)
             flight = Flight(number, destination, departure_time, emergency)
-            flight.status = 'Added and awaiting scheduling'
             self.history.append(flight)
             heapq.heappush(self.flight_queue, flight)
             print(f"Added: {flight}")
-
-            # If destination not in routes, add default route
             if destination not in self.airport_graph.graph:
                 self.airport_graph.add_route("JFK", destination, 5)
         except ValueError:
@@ -67,12 +68,31 @@ class Managmement_System:
         print(f"Scheduled {len(self.scheduled_flights)} flights.")
 
     # ---------------- RUNWAYS ----------------
+    def _clear_departed_flights(self):
+        now = datetime.now()
+        for runway in self.runways:
+            if not runway.is_available and runway.current_flight.departure_time <= now:
+                print(f"Flight {runway.current_flight.flight_number} has departed. Clearing {runway}.")
+                runway.release_runway()
+
+    def _next_available_time(self):
+        now = datetime.now()
+        remaining_times = [
+            (r.current_flight.departure_time - now).total_seconds() / 60
+            for r in self.runways
+            if not r.is_available and r.current_flight.departure_time > now
+        ]
+        return min(remaining_times) if remaining_times else 0
+
     def allocate_runways(self):
-        """Assign available runways to scheduled flights."""
+        self._clear_departed_flights()
+        if all(not r.is_available for r in self.runways):
+            wait_minutes = round(self._next_available_time(), 2)
+            print(f"⚠️ All runways are currently occupied. Next available in ~{wait_minutes} minutes.")
+            return
         if not self.scheduled_flights:
             print("No flights waiting for runways.")
             return
-
         for flight in self.scheduled_flights[:]:
             for runway in self.runways:
                 if runway.is_available and runway.assign_flight(flight):

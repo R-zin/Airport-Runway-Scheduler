@@ -15,7 +15,7 @@ def add_plane(data:add_flights):
         management_system.schedule_flights()
         return {'status':f'flight No {data.flight_no} added successfully'}
     except Exception as e:
-        raise HTTPException(status_code=500,detail='flight adding failed')
+        raise HTTPException(status_code=500,detail=f'flight adding failed {str(e)}')
 @app.post('/flights/cancel_flight')
 def cancel(data:cancel_flight):
     try:
@@ -95,15 +95,13 @@ def runway_info():
         }
     except Exception as e:
         raise HTTPException(status_code=500,detail=f'COuld,nt get info {str(e)}')
-
-@app.post('/runways/release_runway')
-def release(data:ReleaseRunway):
+@app.get('/runways/clear_departed')
+def clear_departed():
     try:
-        management_system.runways[data.runway_no].release_runway()
-        return {'status':'Runway released successfully'}
+        management_system._clear_departed_flights()
+        return {"Status": "Succesfully cleared departed flights"}
     except Exception as e:
-        raise HTTPException(status_code=500,detail=f'Could not release runway {str(e)}')
-
+        raise HTTPException(status_code=500,detail=f"Couldnt automcatically clear runway {str(e)}")
 
 
 

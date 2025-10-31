@@ -1,11 +1,26 @@
 from datetime import time
 from AirportManagementSystem import Managmement_System
 from fastapi import FastAPI,HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from BackEnd_Api.DataModels import *
 
 management_system = Managmement_System()
-management_system._add_sample_routes()
 app = FastAPI()
+
+# CORS for local development and potential deployment origins
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "*",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.post('/flights/add_flight')
@@ -26,8 +41,19 @@ def cancel(data:cancel_flight):
 @app.get('/flights/cancelled_list')
 def get_cancelled_list():
     try:
-        lst = management_system.canceled_flights
-        return {'cancelled_list':lst}
+        flights = management_system.canceled_flights
+        flight_data = [
+            FlightResponse(
+                flight_no=f.flight_number,
+                destination=f.destination,
+                departure_time=f.departure_time.strftime("%H:%M"),
+                status=f.status,
+                assigned_runway=f.assigned_runway_no,
+                Emergency_flight=f.is_emergency
+            )
+            for f in flights
+        ]
+        return {'cancelled_list': flight_data}
     except Exception as e:
         raise HTTPException(status_code=500,detail=f'Could not retrive cancelled flights {str(e)}')
 
